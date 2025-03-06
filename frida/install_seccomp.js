@@ -141,6 +141,7 @@ function install_seccomp(whitelist) {
     struct seccomp_data {
       int nr;
       unsigned int arch;
+      unsigned long long instruction_pointer;
       unsigned long long args[6];
     };
     struct sock_filter {
@@ -176,7 +177,6 @@ function install_seccomp(whitelist) {
         BPF_JUMP(BPF_JMP | BPF_JEQ | BPF_K, 0xDEADBEAF, 1, 0),
         BPF_STMT(BPF_RET | BPF_K, SECCOMP_RET_TRACE),
         BPF_STMT(BPF_RET | BPF_K, SECCOMP_RET_ALLOW),
-        BPF_STMT(BPF_RET | BPF_K, SECCOMP_RET_TRACE)
       };
       struct sock_fprog prog = {
         .len = sizeof(filter) / sizeof(filter[0]),
